@@ -1,68 +1,39 @@
-## Obsidian Sample Plugin
+## Obsidian CircuitJS
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+An Obsidian.md plugin to embed [CircuitJS](https://falstad.com/circuit/circuitjs.html) circuit simulations into notes
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+### Purpose
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+I like using CircuitJS for sketching out circuit designs and I wanted a good way to organize and reference those circuits. With this plugin, I am able to keep the actual circuit designs in version control and backed up along with the rest of my Obsidian vault. Having the circuits embedded in Markdown means I can also include extensive notes on the circuits, links to additional information, etc.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+### Usage
 
-### First time developing plugins?
+In CircuitJS use `File -> Export As Text...` and paste the code into a markdown code block tagged as `circuitjs` like this:
 
-Quick starting guide for new plugin devs:
+```
+```circuitjs
+$ 1 0.000005 10.20027730826997 50 5 43 5e-11
+r 176 80 384 80 0 10
+s 384 80 448 80 0 1 false
+w 176 80 176 352 0
+c 384 352 176 352 0 0.000015 -9.16123055990675 -10
+l 384 80 384 352 0 1 -0.01424104005209455 0
+v 448 352 448 80 0 0 40 5 0 0 0.5
+r 384 352 448 352 0 100
+o 4 64 0 4099 20 0.05 0 2 4 3
+o 3 64 0 4099 20 0.05 1 2 3 3
+o 0 64 0 4099 0.625 0.05 2 2 0 3
+38 3 F1 0 0.000001 0.000101 -1 Capacitance
+38 4 F1 0 0.01 1.01 -1 Inductance
+38 0 F1 0 1 101 -1 Resistance
+h 1 4 3
+` ` `
+```
 
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+When in Reading view Obsidian will then replace the code block with an emedded CircuitJS instance with the circuit defined in the code, and a link to open the circuit in a full browser.
 
-### Releasing new releases
+![CircuitJS View](https://raw.githubusercontent.com/StevenGann/obsidian-circuitjs/master/docs/screenshot.png)
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+### Limitations
 
-### Adding your plugin to the community plugin list
-
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-### How to use
-
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
-
-### Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-### Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-
-### API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+The embedded simulation is completely interactive, but changes don't get stored back in the code. If you make changes in the simulation and want to keep them, use `File -> Export As Text...` before switching back to Editing mode and pasting in the updated code.
