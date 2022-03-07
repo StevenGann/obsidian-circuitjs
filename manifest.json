@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-circuitjs",
 	"name": "Obsidian CircuitJS",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"minAppVersion": "0.12.0",
 	"description": "Integrating CircuitJS and Obsidian",
 	"author": "Steven Gann",
