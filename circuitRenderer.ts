@@ -4,7 +4,7 @@ import * as LZString from 'lz-string';
 import { CircuitJsSettings } from 'main';
 
 export default class Renderer {
-    
+
 }
 
 export class CircuitRenderChild extends MarkdownRenderChild {
@@ -21,20 +21,39 @@ export class CircuitRenderChild extends MarkdownRenderChild {
         this.code = content;
 
         this.compressed = LZString.compressToEncodedURIComponent(this.code);
-        console.log('Code: ' + this.code);
-        console.log('Compressed: ' + this.compressed);
-
-        this.url = 'http://falstad.com/circuit/circuitjs.html?ctz='+this.compressed;
+        
+        if(this.settings.editable)
+        {
+            this.url = `${this.settings.circuitJsUrl}?ctz=${this.compressed}&running=true`;
+        }
+        else
+        {
+            this.url = `${this.settings.circuitJsUrl}?ctz=${this.compressed}&running=false`;
+        }
     }
 
     onload() {
-        this.containerEl.innerHTML = '<div>'+
-        '<a href="'+this.url+'">[EDIT]</a>'+
-        '<iframe src="'+this.url+'&running='+this.settings.editable+'&hideMenu=false" width="100%" height="600px"/>'+
+        const div = document.createElement("div");
+
+        if (this.settings.editLink) {
+            const editLink = document.createElement("a");
+            editLink.setAttribute("href", this.url);
+            const editLinkContent = document.createTextNode("[EDIT]");
+            editLink.appendChild(editLinkContent);
+            div.appendChild(editLink);
+        }
+
+        const iframeNode = document.createElement("iframe");
+        iframeNode.setAttribute("src", this.url);
+        iframeNode.setAttribute("width", "100%");
+        iframeNode.setAttribute("height", "600px");
+
         
-        '</div>';
+        div.appendChild(iframeNode);
+
+        this.containerEl.appendChild(div);
     }
 
-    onunload() { 
+    onunload() {
     }
 }

@@ -5,10 +5,16 @@ import Renderer, { CircuitRenderChild } from './circuitRenderer';
 
 export interface CircuitJsSettings {
 	editable: boolean;
+	editLink: boolean;
+	circuitJsUrl: string;
+	circuitTag: string;
 }
 
 const DEFAULT_SETTINGS: CircuitJsSettings = {
-	editable: true
+	editable: true,
+	editLink: true,
+	circuitJsUrl: "http://falstad.com/circuit/circuitjs.html",
+	circuitTag: "circuitjs"
 }
 
 
@@ -16,20 +22,15 @@ const DEFAULT_SETTINGS: CircuitJsSettings = {
 export default class CircuitJsPlugin extends Plugin {
 	settings: CircuitJsSettings;
 	renderer: Renderer;
-	statusBarItemEl: HTMLElement;
 
 	postprocessor = async (content: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-		this.statusBarItemEl.setText('PostProcessor Running');
 		ctx.addChild(new CircuitRenderChild(el, this, content, this.settings));
 	}
 
 	async onload() {
 		await this.loadSettings();
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		this.statusBarItemEl = this.addStatusBarItem();
-
-		this.registerMarkdownCodeBlockProcessor('circuitjs', this.postprocessor);
+		this.registerMarkdownCodeBlockProcessor(this.settings.circuitTag, this.postprocessor);
 	}
 
 	onunload() {
