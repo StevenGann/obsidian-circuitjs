@@ -21,6 +21,10 @@ export default tseslint.config(
 			"main.js",
 			"*.mjs",
 			"*.mts",
+			"vendor/**",
+			"scripts/**",
+			"dist/**",
+			"circuitjs/**",
 		],
 	}
 );

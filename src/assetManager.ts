@@ -1,4 +1,4 @@
-import { App, Notice, Platform, FileSystemAdapter, requestUrl } from "obsidian";
+import { App, Platform, FileSystemAdapter, requestUrl } from "obsidian";
 import { CircuitJsSettings } from "./settings";
 
 /**
@@ -42,7 +42,9 @@ export class AssetManager {
 		}
 
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-require-imports
 			const fs = require("fs");
+			// eslint-disable-next-line @typescript-eslint/no-require-imports
 			const path = require("path");
 
 			const htmlPath = path.join(this.assetsDir, "circuitjs.html");
@@ -151,8 +153,11 @@ export class AssetManager {
 	 * Extract a zip file to the assets directory
 	 */
 	private async extractZip(zipData: ArrayBuffer): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const fs = require("fs");
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const path = require("path");
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const AdmZip = require("adm-zip");
 
 		// Ensure assets directory exists
@@ -170,7 +175,9 @@ export class AssetManager {
 	 * Falls back to manual extraction
 	 */
 	private async extractZipManual(zipData: ArrayBuffer): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const fs = require("fs");
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const path = require("path");
 
 		// Ensure assets directory exists
@@ -182,6 +189,7 @@ export class AssetManager {
 		// For now, we'll use Node's built-in zlib with manual ZIP parsing
 		// This is a simplified approach - in production, use a proper ZIP library
 
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const JSZip = require("jszip");
 		const zip = await JSZip.loadAsync(zipData);
 
@@ -214,6 +222,7 @@ export class AssetManager {
 		}
 
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-require-imports
 			const fs = require("fs");
 			if (fs.existsSync(this.assetsDir)) {
 				fs.rmSync(this.assetsDir, { recursive: true, force: true });
