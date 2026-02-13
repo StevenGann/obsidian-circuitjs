@@ -35,11 +35,17 @@ export class CircuitRenderChild extends MarkdownRenderChild {
 			const adapter = this.app.vault.adapter;
 			if (adapter instanceof FileSystemAdapter) {
 				const basePath = adapter.getBasePath();
-				// Plugin assets are in .obsidian/plugins/circuitjs/circuitjs/
-				const pluginPath = `${basePath}/.obsidian/plugins/circuitjs/circuitjs/circuitjs.html`;
+				const configDir = this.app.vault.configDir;
+				// Plugin assets are in {configDir}/plugins/circuitjs/circuitjs/
+				const pluginPath = `${basePath}/${configDir}/plugins/circuitjs/circuitjs/circuitjs.html`;
 				// Normalize path separators for Windows and ensure proper file:// URL format
 				const normalizedPath = pluginPath.replace(/\\/g, "/");
-				return `file:///${normalizedPath}`;
+				// On Windows, paths don't start with /, so we need file:///C:/...
+				// On macOS/Linux, paths start with /, so file:// + /path = file:///path
+				const fileUrl = normalizedPath.startsWith("/")
+					? `file://${normalizedPath}`
+					: `file:///${normalizedPath}`;
+				return fileUrl;
 			}
 		}
 		return this.settings.circuitJsUrl;

@@ -47,7 +47,7 @@ const copyCircuitJsPlugin = {
 	setup(build) {
 		build.onEnd(async (result) => {
 			if (result.errors.length === 0 && prod) {
-				copyCircuitJsAssets();
+				await copyCircuitJsAssets();
 			}
 		});
 	},

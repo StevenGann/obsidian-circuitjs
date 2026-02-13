@@ -35,6 +35,7 @@
 		"typescript-eslint": "^8.21.0"
 	},
 	"dependencies": {
+		"adm-zip": "^0.5.16",
 		"lz-string": "^1.5.0",
 		"obsidian": "latest"
 	}

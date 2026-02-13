@@ -21,11 +21,12 @@ export class AssetManager {
 		this.app = app;
 		this.settings = settings;
 
-		// Get plugin directory path
+		// Get plugin directory path using Obsidian's configDir (supports custom config directories)
 		const adapter = this.app.vault.adapter;
 		if (adapter instanceof FileSystemAdapter) {
 			const basePath = adapter.getBasePath();
-			this.pluginDir = `${basePath}/.obsidian/plugins/circuitjs`;
+			const configDir = this.app.vault.configDir;
+			this.pluginDir = `${basePath}/${configDir}/plugins/circuitjs`;
 			this.assetsDir = `${this.pluginDir}/circuitjs`;
 		} else {
 			this.pluginDir = "";
@@ -168,49 +169,6 @@ export class AssetManager {
 		// Extract zip
 		const zip = new AdmZip(Buffer.from(zipData));
 		zip.extractAllTo(this.assetsDir, true);
-	}
-
-	/**
-	 * Alternative extraction using JSZip (if adm-zip not available)
-	 * Falls back to manual extraction
-	 */
-	private async extractZipManual(zipData: ArrayBuffer): Promise<void> {
-		// eslint-disable-next-line @typescript-eslint/no-require-imports
-		const fs = require("fs");
-		// eslint-disable-next-line @typescript-eslint/no-require-imports
-		const path = require("path");
-
-		// Ensure assets directory exists
-		if (!fs.existsSync(this.assetsDir)) {
-			fs.mkdirSync(this.assetsDir, { recursive: true });
-		}
-
-		// Try using decompress or similar
-		// For now, we'll use Node's built-in zlib with manual ZIP parsing
-		// This is a simplified approach - in production, use a proper ZIP library
-
-		// eslint-disable-next-line @typescript-eslint/no-require-imports
-		const JSZip = require("jszip");
-		const zip = await JSZip.loadAsync(zipData);
-
-		const entries = Object.keys(zip.files);
-		for (const entryName of entries) {
-			const entry = zip.files[entryName];
-			const destPath = path.join(this.assetsDir, entryName);
-
-			if (entry.dir) {
-				if (!fs.existsSync(destPath)) {
-					fs.mkdirSync(destPath, { recursive: true });
-				}
-			} else {
-				const content = await entry.async("nodebuffer");
-				const dir = path.dirname(destPath);
-				if (!fs.existsSync(dir)) {
-					fs.mkdirSync(dir, { recursive: true });
-				}
-				fs.writeFileSync(destPath, content);
-			}
-		}
 	}
 
 	/**
