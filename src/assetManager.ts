@@ -26,7 +26,7 @@ export class AssetManager {
 		if (adapter instanceof FileSystemAdapter) {
 			const basePath = adapter.getBasePath();
 			const configDir = this.app.vault.configDir;
-			this.pluginDir = `${basePath}/${configDir}/plugins/circuitjs`;
+			this.pluginDir = `${basePath}/${configDir}/plugins/obsidian-circuitjs`;
 			this.assetsDir = `${this.pluginDir}/circuitjs`;
 		} else {
 			this.pluginDir = "";
