@@ -1,8 +1,8 @@
-# Obsidian CircuitJS
+# CircuitJS
 
 An [Obsidian.md](https://obsidian.md/) plugin to embed [CircuitJS](https://falstad.com/circuit/circuitjs.html) circuit simulations directly into your notes.
 
-![CircuitJS View](https://raw.githubusercontent.com/StevenGann/obsidian-circuitjs/master/docs/screenshot.png)
+![CircuitJS embedded in Obsidian](https://raw.githubusercontent.com/StevenGann/obsidian-circuitjs/master/docs/screenshot.png)
 
 ## Table of Contents
 
@@ -46,7 +46,7 @@ This plugin bridges the gap between circuit design and documentation. CircuitJS 
 ### Manual Installation
 
 1. Download the latest release from the [releases page](https://github.com/StevenGann/obsidian-circuitjs/releases)
-2. Extract the files to your vault's plugins folder: `<vault>/.obsidian/plugins/obsidian-circuitjs/`
+2. Extract the files to your vault's plugins folder: `<vault>/.obsidian/plugins/circuitjs/`
 3. Reload Obsidian
 4. Enable the plugin in Settings → Community plugins
 
@@ -104,9 +104,9 @@ For complete documentation, see the [CircuitJS documentation](https://github.com
 | Setting | Description | Default |
 |---------|-------------|---------|
 | **Editable** | Whether the embedded simulation can be interacted with | `true` |
-| **Edit Link** | Show `[EDIT]` link to open circuit in full browser | `true` |
-| **CircuitJS URL** | Base URL for the CircuitJS application | `http://falstad.com/circuit/circuitjs.html` |
-| **Circuit Tag** | Code block tag to trigger rendering | `circuitjs` |
+| **Show edit link** | Show `[EDIT]` link to open circuit in full browser | `true` |
+| **CircuitJS URL** | Base URL for the CircuitJS application | `https://falstad.com/circuit/circuitjs.html` |
+| **Code block tag** | Code block tag to trigger rendering | `circuitjs` |
 
 ## Limitations
 
@@ -119,7 +119,7 @@ For complete documentation, see the [CircuitJS documentation](https://github.com
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Node.js](https://nodejs.org/) (v18 or higher)
 - [pnpm](https://pnpm.io/) (recommended) or npm
 
 ### Setup
@@ -137,6 +137,9 @@ pnpm dev
 
 # Production build
 pnpm build
+
+# Run linting
+pnpm lint
 ```
 
 ### Development Workflow
@@ -148,31 +151,41 @@ pnpm build
 ## Project Structure
 
 ```
-obsidian-circuitjs/
-├── main.ts              # Plugin entry point and settings
-├── circuitRenderer.ts   # Circuit rendering and iframe logic
-├── styles.css           # Plugin styles (currently empty)
-├── manifest.json        # Obsidian plugin manifest
-├── package.json         # Node.js dependencies and scripts
-├── tsconfig.json        # TypeScript configuration
-├── esbuild.config.mjs   # Build configuration
-├── versions.json        # Version compatibility mapping
+circuitjs/
+├── src/
+│   ├── main.ts              # Plugin entry point
+│   ├── settings.ts          # Settings interface and tab
+│   └── circuitRenderer.ts   # Circuit rendering and iframe logic
+├── styles.css               # Plugin styles
+├── manifest.json            # Obsidian plugin manifest
+├── package.json             # Node.js dependencies and scripts
+├── tsconfig.json            # TypeScript configuration
+├── esbuild.config.mjs       # Build configuration
+├── eslint.config.mjs        # ESLint configuration
+├── version-bump.mjs         # Version bump script
+├── versions.json            # Version compatibility mapping
 ├── docs/
-│   └── screenshot.png   # Documentation screenshot
-└── README.md            # This file
+│   ├── screenshot.png       # Documentation screenshot
+│   └── MODERNIZATION.md     # Modernization guide
+└── README.md                # This file
 ```
 
 ## Architecture
 
 ### Core Components
 
-#### `main.ts` - Plugin Entry Point
+#### `src/main.ts` - Plugin Entry Point
 
 The main plugin class `CircuitJsPlugin` extends Obsidian's `Plugin` class and:
 
 - Loads/saves plugin settings
+- Registers the settings tab
 - Registers the markdown code block processor for `circuitjs` blocks
 - Delegates rendering to `CircuitRenderChild`
+
+#### `src/settings.ts` - Settings Management
+
+Contains the settings interface, default values, and the settings tab UI:
 
 ```typescript
 interface CircuitJsSettings {
@@ -183,7 +196,7 @@ interface CircuitJsSettings {
 }
 ```
 
-#### `circuitRenderer.ts` - Rendering Engine
+#### `src/circuitRenderer.ts` - Rendering Engine
 
 The `CircuitRenderChild` class extends `MarkdownRenderChild` and handles:
 
@@ -204,23 +217,26 @@ Circuit Code → LZ Compression → URL Parameter → iframe src
 | `obsidian` | Obsidian API types and base classes |
 | `lz-string` | LZ-based compression for URL encoding |
 | `esbuild` | Fast TypeScript bundler |
+| `typescript` | TypeScript compiler |
+| `typescript-eslint` | ESLint TypeScript support |
 
 ### Build Process
 
 The plugin uses esbuild for building:
 
 - **Development**: `pnpm dev` - Builds with watch mode and inline source maps
-- **Production**: `pnpm build` - Optimized build with tree shaking, no source maps
+- **Production**: `pnpm build` - Type-checked, optimized build with tree shaking and minification
 
-Output is a single `main.js` file in CommonJS format targeting ES2016.
+Output is a single `main.js` file in CommonJS format targeting ES2018.
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/my-feature`
 3. Make your changes
-4. Test in a local Obsidian vault
-5. Submit a pull request
+4. Run linting: `pnpm lint`
+5. Test in a local Obsidian vault
+6. Submit a pull request
 
 ## License
 

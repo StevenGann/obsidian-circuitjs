@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-circuitjs",
-	"name": "Obsidian CircuitJS",
+	"id": "circuitjs",
+	"name": "CircuitJS",
 	"version": "1.0.0",
-	"minAppVersion": "0.12.0",
-	"description": "Integrating CircuitJS and Obsidian",
+	"minAppVersion": "0.15.0",
+	"description": "Embed interactive CircuitJS circuit simulations in your notes",
 	"author": "Steven Gann",
 	"authorUrl": "https://github.com/StevenGann",
 	"isDesktopOnly": true
