@@ -1,10 +1,10 @@
 /**
  * TypeScript declarations for Electron webview element
- * 
+ *
  * The <webview> element is an Electron-specific element that allows
  * embedding web content in a separate process. It's not part of the
  * standard DOM types, so we need to declare it here.
- * 
+ *
  * @see https://www.electronjs.org/docs/latest/api/webview-tag
  */
 
