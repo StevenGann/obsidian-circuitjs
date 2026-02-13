@@ -1,0 +1,3 @@
+[submodule "vendor/circuitjs1"]
+	path = vendor/circuitjs1
+	url = https://github.com/pfalstad/circuitjs1.git

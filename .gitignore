@@ -20,3 +20,12 @@ data.json
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
+
+# CircuitJS build artifacts (submodule)
+vendor/circuitjs1/war/circuitjs1/
+vendor/circuitjs1/site/
+vendor/circuitjs1/.gradle/
+vendor/circuitjs1/build/
+
+# Local CircuitJS distribution (built assets)
+dist/
