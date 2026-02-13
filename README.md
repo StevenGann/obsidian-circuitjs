@@ -13,6 +13,7 @@ An [Obsidian.md](https://obsidian.md/) plugin to embed [CircuitJS](https://falst
 - [Settings](#settings)
 - [Limitations](#limitations)
 - [Development](#development)
+- [Releasing](#releasing)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [License](#license)
@@ -147,6 +148,52 @@ pnpm lint
 1. Create a symbolic link or copy the plugin folder to your test vault's `.obsidian/plugins/` directory
 2. Run `pnpm dev` to start the development build with hot reloading
 3. Enable the plugin in Obsidian and use `Ctrl+R` to reload after changes
+
+## Releasing
+
+This project uses GitHub Actions for automated releases. Releases are **deliberately triggered** — not every commit creates a release.
+
+### CI Pipeline
+
+Every push and pull request runs the CI workflow which:
+- Installs dependencies
+- Runs linting (`npm run lint`)
+- Builds the plugin (`npm run build`)
+- Verifies the build output
+
+### Creating a Release
+
+1. **Update the version** in `package.json`:
+   ```bash
+   npm version patch  # for bug fixes (1.0.0 → 1.0.1)
+   npm version minor  # for new features (1.0.0 → 1.1.0)
+   npm version major  # for breaking changes (1.0.0 → 2.0.0)
+   ```
+   This automatically updates `package.json`, `manifest.json`, and `versions.json`.
+
+2. **Push the changes and tag**:
+   ```bash
+   git push && git push --tags
+   ```
+
+3. **Create a GitHub Release**:
+   - Go to the [Releases page](https://github.com/StevenGann/obsidian-circuitjs/releases)
+   - Click "Draft a new release"
+   - Select the tag you just pushed (e.g., `1.0.1`)
+   - Add release notes describing the changes
+   - Click "Publish release"
+
+4. **Automated deployment**:
+   - The release workflow automatically builds the plugin
+   - Attaches `main.js`, `manifest.json`, and `styles.css` to the release
+   - Obsidian's plugin registry automatically picks up the new version
+
+### How Obsidian Finds Updates
+
+Obsidian's community plugin registry reads from your GitHub Releases. When you publish a release:
+- The tag version must match the version in `manifest.json`
+- The release must include `main.js`, `manifest.json`, and optionally `styles.css`
+- Users will see the update available in Obsidian's settings
 
 ## Project Structure
 
