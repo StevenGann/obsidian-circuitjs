@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -21,8 +23,17 @@ jobs:
           node-version: "20"
           cache: "npm"
 
+      - name: Setup Java (for CircuitJS build)
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Build CircuitJS assets
+        run: npm run build:circuitjs
 
       - name: Build plugin
         run: npm run build
@@ -51,6 +62,26 @@ jobs:
 
           echo "Version verification passed!"
 
+      - name: Verify CircuitJS assets
+        run: |
+          if [ ! -d "circuitjs" ]; then
+            echo "ERROR: circuitjs/ directory was not created"
+            exit 1
+          fi
+          if [ ! -f "circuitjs/circuitjs.html" ]; then
+            echo "ERROR: circuitjs/circuitjs.html not found"
+            exit 1
+          fi
+          echo "CircuitJS assets verified!"
+          ls -la circuitjs/
+          du -sh circuitjs/
+
+      - name: Create CircuitJS archive
+        run: |
+          cd circuitjs && zip -r ../circuitjs-assets.zip . && cd ..
+          echo "CircuitJS archive created"
+          ls -la circuitjs-assets.zip
+
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
@@ -58,5 +89,6 @@ jobs:
             main.js
             manifest.json
             styles.css
+            circuitjs-assets.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

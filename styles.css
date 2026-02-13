@@ -1,1 +1,76 @@
+/* CircuitJS Plugin Styles */
 
+/* Container for the circuit embed */
+.circuitjs-container {
+	display: flex;
+	flex-direction: column;
+	margin: 1em 0;
+}
+
+/* Edit link styling */
+.circuitjs-edit-link {
+	align-self: flex-end;
+	font-size: 0.8em;
+	margin-bottom: 0.5em;
+	color: var(--text-accent);
+	text-decoration: none;
+}
+
+.circuitjs-edit-link:hover {
+	text-decoration: underline;
+}
+
+/* Shared styles for both webview and iframe */
+.circuitjs-webview,
+.circuitjs-iframe {
+	width: 100%;
+	height: 600px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	background-color: var(--background-primary);
+}
+
+/* Webview-specific styles */
+.circuitjs-webview {
+	/* Webview may need explicit display */
+	display: block;
+}
+
+/* Iframe-specific styles */
+.circuitjs-iframe {
+	/* Remove default iframe border */
+	border: 1px solid var(--background-modifier-border);
+}
+
+/* Dark mode adjustments - CircuitJS has its own dark mode handling */
+.theme-dark .circuitjs-webview,
+.theme-dark .circuitjs-iframe {
+	border-color: var(--background-modifier-border);
+}
+
+/* Missing assets message */
+.circuitjs-assets-missing {
+	padding: 1em;
+	margin-bottom: 1em;
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	border-left: 4px solid var(--text-warning);
+}
+
+.circuitjs-assets-missing p {
+	margin: 0.5em 0;
+}
+
+.circuitjs-assets-missing code {
+	background-color: var(--background-primary);
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 0.9em;
+}
+
+.circuitjs-fallback-note {
+	font-size: 0.85em;
+	color: var(--text-muted);
+	margin: 0.5em 0;
+}

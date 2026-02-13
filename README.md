@@ -29,6 +29,7 @@ This plugin bridges the gap between circuit design and documentation. CircuitJS 
 
 ## Features
 
+- **Offline Mode** (NEW in v2.0): Run simulations without internet using bundled CircuitJS
 - **Embedded Simulations**: View fully interactive CircuitJS simulations directly in your notes
 - **Live Interaction**: Interact with running simulations in Reading view
 - **Quick Editing**: One-click link to open circuits in full CircuitJS browser
@@ -104,17 +105,18 @@ For complete documentation, see the [CircuitJS documentation](https://github.com
 
 | Setting | Description | Default |
 |---------|-------------|---------|
+| **Offline mode** | Use bundled CircuitJS for offline support (desktop only) | `true` |
 | **Editable** | Whether the embedded simulation can be interacted with | `true` |
 | **Show edit link** | Show `[EDIT]` link to open circuit in full browser | `true` |
-| **CircuitJS URL** | Base URL for the CircuitJS application | `https://falstad.com/circuit/circuitjs.html` |
+| **CircuitJS URL** | Base URL for the CircuitJS application (used when offline mode is disabled) | `https://falstad.com/circuit/circuitjs.html` |
 | **Code block tag** | Code block tag to trigger rendering | `circuitjs` |
 
 ## Limitations
 
-- **Desktop Only**: This plugin is desktop-only due to iframe requirements
+- **Desktop Only**: Offline mode requires Electron's webview (desktop Obsidian only)
 - **No Auto-Save**: Changes made in the embedded simulation are not saved back to the code block
 - **Manual Export**: To persist changes, use `File → Export As Text...` in the simulation and paste the updated code back into your note
-- **Online Required**: The embedded iframe loads from the CircuitJS website (unless self-hosting)
+- **Mobile**: Mobile users must disable offline mode and use the remote CircuitJS URL
 
 ## Development
 
