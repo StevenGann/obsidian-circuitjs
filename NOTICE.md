@@ -72,7 +72,7 @@ SOFTWARE.
 
 ## Note on License Compatibility
 
-This Obsidian plugin (obsidian-circuitjs) is licensed under the MIT License. The bundled CircuitJS1 component is licensed under GPL-2.0. 
+This Obsidian plugin (obsidian-circuitjs) is licensed under the MIT License. The bundled CircuitJS1 component is licensed under GPL-2.0.
 
 The plugin code and CircuitJS1 are kept separate:
 - The plugin code (MIT) loads CircuitJS1 in an isolated webview/iframe

@@ -1,6 +1,7 @@
 import { App, MarkdownRenderChild, Platform, FileSystemAdapter } from "obsidian";
 import * as LZString from "lz-string";
 import { CircuitJsSettings } from "./settings";
+import { AssetManager } from "./assetManager";
 
 export class CircuitRenderChild extends MarkdownRenderChild {
 	code: string;
@@ -8,17 +9,20 @@ export class CircuitRenderChild extends MarkdownRenderChild {
 	url: string;
 	settings: CircuitJsSettings;
 	app: App;
+	assetManager: AssetManager;
 
 	constructor(
 		el: HTMLElement,
 		content: string,
 		settings: CircuitJsSettings,
-		app: App
+		app: App,
+		assetManager: AssetManager
 	) {
 		super(el);
 
 		this.app = app;
 		this.settings = settings;
+		this.assetManager = assetManager;
 		this.code = content;
 		this.compressed = LZString.compressToEncodedURIComponent(this.code);
 	}
@@ -62,8 +66,6 @@ export class CircuitRenderChild extends MarkdownRenderChild {
 		const div = document.createElement("div");
 		div.addClass("circuitjs-container");
 
-		this.url = this.buildFullUrl();
-
 		// Edit link - always uses online URL for full browser experience
 		if (this.settings.editLink) {
 			const editLink = document.createElement("a");
@@ -75,14 +77,56 @@ export class CircuitRenderChild extends MarkdownRenderChild {
 			div.appendChild(editLink);
 		}
 
-		// Use webview for offline mode (desktop only), iframe for online mode
-		if (this.settings.offlineMode && Platform.isDesktopApp) {
+		// Check if we should use offline mode and if assets are ready
+		const useOffline = this.settings.offlineMode &&
+			Platform.isDesktopApp &&
+			this.assetManager.areAssetsReady();
+
+		if (this.settings.offlineMode && Platform.isDesktopApp && !this.assetManager.areAssetsReady()) {
+			// Show message that assets are downloading/missing
+			this.createAssetsMissingMessage(div);
+		} else if (useOffline) {
+			this.url = this.buildFullUrl();
 			this.createWebview(div);
 		} else {
+			this.url = this.buildFullUrl();
 			this.createIframe(div);
 		}
 
 		this.containerEl.appendChild(div);
+	}
+
+	/**
+	 * Show a message when offline assets are missing
+	 */
+	private createAssetsMissingMessage(container: HTMLElement): void {
+		const messageDiv = document.createElement("div");
+		messageDiv.addClass("circuitjs-assets-missing");
+		messageDiv.innerHTML = `
+			<p><strong>CircuitJS offline assets not installed.</strong></p>
+			<p>Use the command palette (Ctrl/Cmd+P) and run:<br>
+			<code>CircuitJS: Download CircuitJS offline assets</code></p>
+			<p>Or disable offline mode in settings to use the online version.</p>
+		`;
+		container.appendChild(messageDiv);
+
+		// Also show a fallback iframe with online version
+		const fallbackNote = document.createElement("p");
+		fallbackNote.addClass("circuitjs-fallback-note");
+		fallbackNote.textContent = "Showing online version as fallback:";
+		container.appendChild(fallbackNote);
+
+		// Use online URL as fallback
+		this.url = this.buildOnlineUrl();
+		this.createIframe(container);
+	}
+
+	/**
+	 * Build URL using online CircuitJS (fallback)
+	 */
+	private buildOnlineUrl(): string {
+		const running = this.settings.editable ? "true" : "false";
+		return `${this.settings.circuitJsUrl}?ctz=${this.compressed}&running=${running}`;
 	}
 
 	/**

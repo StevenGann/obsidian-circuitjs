@@ -47,3 +47,30 @@
 .theme-dark .circuitjs-iframe {
 	border-color: var(--background-modifier-border);
 }
+
+/* Missing assets message */
+.circuitjs-assets-missing {
+	padding: 1em;
+	margin-bottom: 1em;
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	border-left: 4px solid var(--text-warning);
+}
+
+.circuitjs-assets-missing p {
+	margin: 0.5em 0;
+}
+
+.circuitjs-assets-missing code {
+	background-color: var(--background-primary);
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 0.9em;
+}
+
+.circuitjs-fallback-note {
+	font-size: 0.85em;
+	color: var(--text-muted);
+	margin: 0.5em 0;
+}
