@@ -287,7 +287,7 @@ Output is a single `main.js` file in CommonJS format targeting ES2018.
 
 ## License
 
-This project is licensed under the [GNU General Public License v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) (GPLv2).
+This project is licensed under the [MIT License](LICENSE).
 
 ## Credits
 

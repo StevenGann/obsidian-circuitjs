@@ -19,7 +19,7 @@
 		"electronics"
 	],
 	"author": "Steven Gann",
-	"license": "GPL-2.0",
+	"license": "MIT",
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",
 		"@types/node": "^16.11.6",
