@@ -14,7 +14,7 @@ export default class CircuitJsPlugin extends Plugin {
 		el: HTMLElement,
 		ctx: MarkdownPostProcessorContext
 	): Promise<void> => {
-		ctx.addChild(new CircuitRenderChild(el, content, this.settings));
+		ctx.addChild(new CircuitRenderChild(el, content, this.settings, this.app));
 	};
 
 	async onload(): Promise<void> {

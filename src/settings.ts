@@ -6,13 +6,15 @@ export interface CircuitJsSettings {
 	editLink: boolean;
 	circuitJsUrl: string;
 	circuitTag: string;
+	offlineMode: boolean;
 }
 
 export const DEFAULT_SETTINGS: CircuitJsSettings = {
 	editable: true,
 	editLink: true,
 	circuitJsUrl: "https://falstad.com/circuit/circuitjs.html",
-	circuitTag: "circuitjs"
+	circuitTag: "circuitjs",
+	offlineMode: true
 };
 
 export class CircuitJsSettingTab extends PluginSettingTab {
@@ -27,6 +29,21 @@ export class CircuitJsSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
+
+		new Setting(containerEl)
+			.setName("Offline mode")
+			.setDesc(
+				"Use bundled CircuitJS for offline support (desktop only). " +
+				"Disable to use the remote URL instead."
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.offlineMode)
+					.onChange(async (value) => {
+						this.plugin.settings.offlineMode = value;
+						await this.plugin.saveSettings();
+					})
+			);
 
 		new Setting(containerEl)
 			.setName("Editable")

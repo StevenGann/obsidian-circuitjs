@@ -7,6 +7,9 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"build:circuitjs": "node scripts/build-circuitjs.mjs",
+		"build:full": "npm run build:circuitjs && npm run build",
+		"postinstall": "git submodule update --init --recursive",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"lint": "eslint ."
 	},
