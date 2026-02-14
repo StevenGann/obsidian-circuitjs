@@ -133,6 +133,19 @@ Closes #42
 
 > **Note**: Releases are managed by maintainers. This section documents the process for reference.
 
+### ⚠️ Tag Naming Convention
+
+**IMPORTANT:** Tags must be version numbers **WITHOUT** the `v` prefix.
+
+✅ **Correct:** `1.2.0`, `1.3.0`, `2.0.0`  
+❌ **Wrong:** `v1.2.0`, `v1.3.0`, `v2.0.0`
+
+Example:
+```bash
+git tag -a 1.2.0 -m "Release 1.2.0 - Description"
+git push origin 1.2.0
+```
+
 ### Overview
 
 This project uses GitHub Actions for automated releases. Releases are **deliberately triggered** — CI runs on every push, but releases only happen when a maintainer creates a GitHub Release.
