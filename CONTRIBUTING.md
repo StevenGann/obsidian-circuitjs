@@ -137,7 +137,7 @@ Closes #42
 
 **IMPORTANT:** Tags must be version numbers **WITHOUT** the `v` prefix.
 
-✅ **Correct:** `1.2.0`, `1.3.0`, `2.0.0`  
+✅ **Correct:** `1.2.0`, `1.3.0`, `2.0.0`
 ❌ **Wrong:** `v1.2.0`, `v1.3.0`, `v2.0.0`
 
 Example:
