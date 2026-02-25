@@ -74,16 +74,23 @@ function hasGradleWrapper() {
 }
 
 /**
+ * Check if system Gradle is available
+ */
+function hasSystemGradle() {
+    return commandExists('gradle');
+}
+
+/**
  * Build CircuitJS using Gradle
  */
-async function buildWithGradle() {
+async function buildWithGradle(gradleCmd) {
     console.log('\n📦 Building CircuitJS with Gradle...');
 
-    const gradlew = process.platform === 'win32' ? 'gradlew.bat' : './gradlew';
+    const cmd = gradleCmd ?? (process.platform === 'win32' ? 'gradlew.bat' : './gradlew');
 
     return new Promise((resolve, reject) => {
         console.log('  Running: gradle compileGwt...');
-        const compile = spawn(gradlew, ['compileGwt', '--console', 'plain'], {
+        const compile = spawn(cmd, ['compileGwt', '--console', 'plain'], {
             cwd: VENDOR_DIR,
             shell: true,
             stdio: 'inherit'
@@ -96,7 +103,7 @@ async function buildWithGradle() {
             }
 
             console.log('  Running: gradle makeSite...');
-            const makeSite = spawn(gradlew, ['makeSite', '--console', 'plain'], {
+            const makeSite = spawn(cmd, ['makeSite', '--console', 'plain'], {
                 cwd: VENDOR_DIR,
                 shell: true,
                 stdio: 'inherit'
@@ -248,10 +255,13 @@ async function main() {
     if (hasPreBuilt) {
         console.log('\n✓ Found pre-built CircuitJS assets in war/');
         copyAssets(WAR_DIR);
-    } else if (hasJava() && hasGradleWrapper()) {
-        console.log('\n✓ Java and Gradle available - building from source...');
+    } else if (hasJava() && (hasGradleWrapper() || hasSystemGradle())) {
+        const gradleCmd = hasGradleWrapper()
+            ? (process.platform === 'win32' ? 'gradlew.bat' : './gradlew')
+            : 'gradle';
+        console.log(`\n✓ Java and Gradle available (${gradleCmd}) - building from source...`);
         try {
-            await buildWithGradle();
+            await buildWithGradle(gradleCmd);
 
             // After build, assets should be in site/ or war/
             const siteDir = join(VENDOR_DIR, 'site');
