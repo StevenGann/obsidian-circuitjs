@@ -33,7 +33,9 @@ jobs:
         run: npm ci
 
       - name: Build CircuitJS assets
+        id: build_circuitjs
         run: npm run build:circuitjs
+        continue-on-error: true
 
       - name: Build plugin
         run: npm run build
@@ -63,6 +65,8 @@ jobs:
           echo "Version verification passed!"
 
       - name: Verify CircuitJS assets
+        id: verify_circuitjs
+        if: steps.build_circuitjs.outcome == 'success'
         run: |
           if [ ! -d "circuitjs" ]; then
             echo "ERROR: circuitjs/ directory was not created"
@@ -75,14 +79,17 @@ jobs:
           echo "CircuitJS assets verified!"
           ls -la circuitjs/
           du -sh circuitjs/
+          echo "assets_available=true" >> "$GITHUB_OUTPUT"
 
       - name: Create CircuitJS archive
+        if: steps.verify_circuitjs.outputs.assets_available == 'true'
         run: |
           cd circuitjs && zip -r ../circuitjs-assets.zip . && cd ..
           echo "CircuitJS archive created"
           ls -la circuitjs-assets.zip
 
-      - name: Upload release assets
+      - name: Upload release assets (with CircuitJS)
+        if: steps.verify_circuitjs.outputs.assets_available == 'true'
         uses: softprops/action-gh-release@v2
         with:
           files: |
@@ -90,5 +97,16 @@ jobs:
             manifest.json
             styles.css
             circuitjs-assets.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release assets (without CircuitJS)
+        if: steps.verify_circuitjs.outputs.assets_available != 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            main.js
+            manifest.json
+            styles.css
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
