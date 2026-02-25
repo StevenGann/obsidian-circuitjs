@@ -1,6 +1,6 @@
 {
 	"name": "circuitjs",
-	"version": "1.2.0",
+	"version": "1.2.2",
 	"description": "Embed interactive CircuitJS circuit simulations in your notes",
 	"main": "main.js",
 	"type": "module",
