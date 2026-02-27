@@ -29,6 +29,12 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Setup Gradle 7.x
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # GWT gradle plugin 1.1.19 requires JavaPluginConvention (removed in Gradle 8+)
+          gradle-version: "7.6.4"
+
       - name: Install dependencies
         run: npm ci
 
